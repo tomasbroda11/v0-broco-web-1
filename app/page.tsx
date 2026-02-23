@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dialog"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { useRouter } from "next/navigation"
 import {
   Cloud,
   Database,
@@ -31,9 +32,6 @@ import {
   Rocket,
   ExternalLink,
 } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
 
 export default function BrocoSolutionsLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

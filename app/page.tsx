@@ -143,7 +143,14 @@ export default function BrocoSolutionsLanding() {
             className="flex items-center gap-3 hover:opacity-90 transition"
             aria-label="Ir al inicio"
           >
-            <Image src="/brand/bs-mark-neg.svg" alt="Broco" width={28} height={28} priority />
+            <Image 
+              src="/brand/bs-mark-neg.svg" 
+              alt="Broco" 
+              width={28} 
+              height={28} 
+              priority 
+              style={{ width: "auto", height: "auto" }}
+            />
             <span className="text-lg font-bold">Broco</span>
           </button>
 

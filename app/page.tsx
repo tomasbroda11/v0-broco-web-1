@@ -1,19 +1,14 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { SiteNavbar } from "@/components/site-navbar"
+import { ProjectCarousel, type ProjectCarouselItem } from "@/components/ui/project-carousel"
+import { TextType } from "@/components/ui/text-type"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import Image from "next/image"
-import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   Cloud,
   Database,
@@ -24,49 +19,29 @@ import {
   Zap,
   Code,
   Brain,
-  Menu,
   ArrowRight,
   Sparkles,
   Target,
   Rocket,
-  ExternalLink,
 } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 
 export default function BrocoSolutionsLanding() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
   const router = useRouter()
   const [sending, setSending] = useState(false)
   const [sendStatus, setSendStatus] = useState<null | "ok" | "error">(null)
 
   const navigateWithTransition = (href: string) => {
-    setIsTransitioning(true)
-    const html = document.documentElement
-    html.classList.add("page-transitioning")
-    document.body.classList.add("page-transitioning")
-    const t = setTimeout(() => router.push(href), 300)
-    // opcional: si el componente desmonta en esos 300ms
-    return () => clearTimeout(t)
+    router.push(href)
   }
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" })
-      setIsMenuOpen(false) // cerrar menú al navegar
     }
   }
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
 
   useEffect(() => {
     router.prefetch("/eternum")
@@ -127,85 +102,69 @@ export default function BrocoSolutionsLanding() {
     },
   ]
 
+  const projectCarouselItems: ProjectCarouselItem[] = [
+    {
+      id: 1,
+      title: "PACSA",
+      description: "Automatización corporativa vía WhatsApp, enrutamiento inteligente, RRHH y difusión gerencial.",
+      logoSrc: "/brand/projects/PacsaLogo.png",
+      logoAlt: "Logo PACSA",
+      category: "Automatización",
+    },
+    {
+      id: 2,
+      title: "Colegio de Odontólogos",
+      description: "Transformación digital institucional, estampilla digital y documentos formales.",
+      logoSrc: "/brand/projects/ColegioLogo.png",
+      logoAlt: "Logo Colegio de Odontólogos",
+      category: "Desarrollo a Medida",
+    },
+    {
+      id: 3,
+      title: "Levain",
+      description: "Despliegue, parametrización y mantenimiento cloud para ERP Odoo.",
+      logoSrc: "/brand/projects/LevainLogo.jpeg",
+      logoAlt: "Logo Levain",
+      category: "ERP / Cloud",
+    },
+    {
+      id: 4,
+      title: "Bertino Integrales",
+      description: "Sitio web institucional para fábrica de aberturas.",
+      logoSrc: "/brand/projects/BertinoLogo.png",
+      logoAlt: "Logo Bertino Integrales",
+      category: "Desarrollo Web",
+    },
+    {
+      id: 5,
+      title: "Argwines",
+      description: "Plataforma web internacional para distribuidora de vinos argentinos en Australia.",
+      logoSrc: "/brand/projects/ArgwinesLogo.jpeg",
+      logoAlt: "Logo Argwines",
+      category: "Desarrollo Web",
+    },
+    {
+      id: 6,
+      title: "Rasafertil",
+      description: "Sitio web institucional para fertilizantes premium y nutrientes naturales para suelos.",
+      logoSrc: "/brand/projects/RasafertilLogo.png",
+      logoAlt: "Logo Rasafertil",
+      category: "Desarrollo Web",
+    },
+    {
+      id: 7,
+      title: "BrocoAgro",
+      description: "Plataforma integral para gestión del productor agropecuario.",
+      logoSrc: "/brand/projects/BrocoAgroLogo.jpeg",
+      logoAlt: "Logo BrocoAgro",
+      category: "Producto Propio",
+    },
+  ]
+
   return (
-    <div
-      className={`min-h-screen bg-[#0D0D0D] text-white overflow-x-hidden overflow-y-auto touch-pan-y ios-smooth-scroll ${isTransitioning ? "transitioning" : ""}`}
-    >
-      {isTransitioning && (
-        <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-[#7F5AF0] to-[#3E6FA8] transition-opacity duration-300 flex items-center justify-center ">
-          <div className="text-white text-2xl font-bold animate-pulse">Cargando...</div>
-        </div>
-      )}
-
+    <div className="min-h-screen bg-[#0D0D0D] text-white overflow-x-hidden overflow-y-auto touch-pan-y ios-smooth-scroll">
       {/* NAV: barra + dropdown mobile */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-        <div className="glass-nav inline-flex items-center gap-6 px-6 py-3 rounded-full">
-          <button
-            onClick={() => scrollToSection("inicio")}
-            className="flex items-center gap-3 hover:opacity-90 transition"
-            aria-label="Ir al inicio"
-          >
-            <Image src="/brand/bs-mark-neg.svg" alt="Broco" width={28} height={28} priority />
-            <span className="text-lg font-bold">Broco</span>
-          </button>
-
-          {/* Links desktop */}
-          <div className="hidden md:flex items-center gap-6 text-sm">
-            <button onClick={() => scrollToSection("inicio")} className="hover:text-[#7F5AF0] transition-colors">
-              Inicio
-            </button>
-            <button onClick={() => scrollToSection("servicios")} className="hover:text-[#7F5AF0] transition-colors">
-              Servicios
-            </button>
-            <button onClick={() => scrollToSection("proyectos")} className="hover:text-[#7F5AF0] transition-colors">
-              Proyectos
-            </button>
-            <button onClick={() => scrollToSection("nosotros")} className="hover:text-[#7F5AF0] transition-colors">
-              Nosotros
-            </button>
-            <button onClick={() => scrollToSection("contacto")} className="hover:text-[#7F5AF0] transition-colors">
-              Contacto
-            </button>
-          </div>
-
-          {/* Hamburguesa */}
-          <button
-            aria-label="Abrir menú"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
-            className="md:hidden inline-flex items-center justify-center rounded p-2 focus:outline-none"
-            onClick={() => setIsMenuOpen((o) => !o)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-
-        {/* Dropdown móvil */}
-        <div
-          id="mobile-menu"
-          className={`md:hidden transition-all duration-200 overflow-hidden mt-2 rounded-2xl glass-nav ${
-            isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
-        >
-          <div className="flex flex-col px-4 py-3 gap-2">
-            <button onClick={() => scrollToSection("inicio")} className="py-2 text-left hover:text-[#7F5AF0]">
-              Inicio
-            </button>
-            <button onClick={() => scrollToSection("servicios")} className="py-2 text-left hover:text-[#7F5AF0]">
-              Servicios
-            </button>
-            <button onClick={() => scrollToSection("proyectos")} className="py-2 text-left hover:text-[#7F5AF0]">
-              Proyectos
-            </button>
-            <button onClick={() => scrollToSection("nosotros")} className="py-2 text-left hover:text-[#7F5AF0]">
-              Nosotros
-            </button>
-            <button onClick={() => scrollToSection("contacto")} className="py-2 text-left hover:text-[#7F5AF0]">
-              Contacto
-            </button>
-          </div>
-        </div>
-      </nav>
+      <SiteNavbar onSectionClick={scrollToSection} />
 
       {/* Hero */}
       <section
@@ -218,18 +177,33 @@ export default function BrocoSolutionsLanding() {
           <div className="grid-pattern" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 text-center">
           <div className="space-y-8">
             <div className="inline-flex items-center space-x-2 glass-badge px-4 py-2 rounded-full text-sm leading-6">
               <Sparkles className="h-4 w-4 text-[#7F5AF0]" />
               <span>Tecnología que transforma empresas</span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black leading-none">
-              <span className="block text-white">Menos operación</span>
-              <span className="block neon-text-large">mas decisión</span>
-            </h1>
+           <h1 className="mx-auto font-black leading-[0.95] text-white text-[clamp(2.1rem,8vw,7rem)]">
+              <span className="block whitespace-nowrap">
+                Menos operación.
+              </span>
 
+              <span className="mt-2 block h-[1.1em] whitespace-nowrap">
+                <span className="inline-block min-w-[16ch] text-center">
+                  <TextType
+                    text={["Más decisión.", "Más control.", "Más productividad.", "Más trazabilidad."]}
+                    typingSpeed={65}
+                    deletingSpeed={35}
+                    pauseDuration={1500}
+                    showCursor
+                    cursorCharacter="▎"
+                    startOnVisible={true}
+                    className="inline-block"
+                  />
+                </span>
+              </span>
+            </h1>
             <p className="text-xl md:text-2xl text-white/70 max-w-2xl mx-auto leading-relaxed">
               Sistemas a medida, automatización, IA y soluciones en la nube para empresas que buscan resultados reales
             </p>
@@ -333,196 +307,58 @@ export default function BrocoSolutionsLanding() {
               </div>
             </div>
           </div>
+
+          <div className="mt-12 animate-on-scroll fade-in">
+            <div className="glass-card rounded-2xl border border-white/10 p-6 md:p-8">
+              <div className="max-w-4xl mx-auto text-center space-y-5">
+                <p className="text-base md:text-lg text-white/75 leading-relaxed">
+                  Conozca nuestra metodología de trabajo. Explore nuestra presentación institucional para conocer en detalle
+                  cómo estructuramos nuestras soluciones y generamos valor medible.
+                </p>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="bg-transparent text-white/85 border-white/25 hover:bg-white/10 hover:text-white"
+                >
+                  <a
+                    href="https://drive.google.com/file/d/1wDoyw6juQjp-FQvRBQDRnyc_xFFQqtbq/view?usp=drive_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Ver Brochure Institucional online
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Proyectos */}
-      <section id="proyectos" className="py-32 relative">
+      {/* Proyectos y Casos de Éxito */}
+      <section id="proyectos" className="py-12 md:py-[4.5rem] relative">
         <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16 animate-on-scroll fade-in">
-              <h2 className="text-4xl md:text-6xl font-bold mb-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-6 md:mb-8 animate-on-scroll fade-in">
+              <h2 className="text-4xl md:text-6xl font-bold mb-3">
                 <span className="gradient-text-section">Proyectos</span>
               </h2>
-              <p className="text-xl text-white/70 leading-relaxed">
-                Soluciones tecnológicas implementadas en escenarios reales.
-              </p>
+              <p className="text-xl text-white/70 leading-relaxed">Algunas soluciones tecnológicas ya implementadas</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-16 animate-on-scroll fade-in">
-              {[
-                {
-                  name: "PACSA",
-                  logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PacsaLogo-k3WET2DerSqGeEOrPeaqQRCrkpe6SS.jpeg",
-                },
-                {
-                  name: "Colegio de Odontólogos",
-                  logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ColegioLogo-TimPhWM9AczVK7PzSHC2B4MzzSgSnp.png",
-                },
-                {
-                  name: "Levain",
-                  logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LevainLogo-dXvQoemmlben4ObSzz1krjXjJBrhjO.jpeg",
-                },
-                {
-                  name: "Bertino Integrales",
-                  logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BertinoLogo-QonRtxHxxQdvqsuLJ8RbSTaBo38r4f.png",
-                },
-                {
-                  name: "Argwines",
-                  logo: "\public\images\ArgwinesLogo.jpeg",
-                },
-                {
-                  name: "Rasafertil",
-                  logo: "\public\images\RasafertilLogo.png",
-                },
-              ].map((project, index) => (
-                <div
-                  key={index}
-                  className="glass-card rounded-xl p-8 flex items-center justify-center min-h-[120px] hover:border-white/20 transition-colors"
-                >
-                  {project.logo ? (
-                    <div className="relative w-full h-20 grayscale opacity-60 hover:opacity-80 transition-opacity">
-                      <Image
-                        src={project.logo}
-                        alt={project.name}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <div className="text-white/40 text-center font-medium text-sm md:text-base">{project.name}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center animate-on-scroll fade-in">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="text-white/80 hover:text-white border border-white/20 hover:border-[#7F5AF0]/50 bg-transparent"
-                  >
-                    Ver detalles de proyectos
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0A0B14]/95 backdrop-blur-xl border-white/10">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-white">Proyectos</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-8 py-4">
-                    {/* Categoría 1 */}
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#7F5AF0]">
-                        Automatización y Optimización de Procesos
-                      </h3>
-                      <div className="glass-card rounded-lg p-6 space-y-3">
-                        <h4 className="font-semibold text-white/90">PACSA (Feedlot)</h4>
-                        <p className="text-white/70 text-sm leading-relaxed">
-                          Desarrollo de flujos de automatización corporativa vía WhatsApp. Implementación de enrutamiento
-                          inteligente para derivar consultas al área correspondiente, automatizaciones de RRHH para fechas
-                          importantes del personal, y módulo de difusión gerencial para envío de comunicados masivos sin
-                          necesidad de agendamiento previo.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Categoría 2 */}
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#7F5AF0]">
-                        Desarrollo a Medida y Transformación Digital
-                      </h3>
-                      <div className="glass-card rounded-lg p-6 space-y-3">
-                        <h4 className="font-semibold text-white/90">
-                          Colegio de Odontólogos de Santa Fe (2da Circunscripción)
-                        </h4>
-                        <p className="text-white/70 text-sm leading-relaxed">
-                          Transformación digital de procesos institucionales. Desarrollo del sistema para la digitalización de
-                          la &apos;Estampilla&apos; del colegio y digitalización integral de documentos formales.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Categoría 3 */}
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#7F5AF0]">Despliegue ERP y Arquitectura Cloud</h3>
-                      <div className="glass-card rounded-lg p-6 space-y-3">
-                        <h4 className="font-semibold text-white/90">Bar Levain</h4>
-                        <p className="text-white/70 text-sm leading-relaxed">
-                          Despliegue, parametrización y mantenimiento continuo de infraestructura en la nube para el sistema de
-                          gestión integral ERP Odoo.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Categoría 4 */}
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#7F5AF0]">Desarrollo Web y Posicionamiento Digital</h3>
-                      <div className="space-y-4">
-                        <div className="glass-card rounded-lg p-6 space-y-3">
-                          <h4 className="font-semibold text-white/90">Pavón Arriba Cereales</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Sitio web corporativo agroindustrial (www.pavonarribacereales.com.ar).
-                          </p>
-                        </div>
-                        <div className="glass-card rounded-lg p-6 space-y-3">
-                          <h4 className="font-semibold text-white/90">Bertino Integrales</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Sitio web institucional para fábrica de aberturas (www.bertinointegrales.com.ar).
-                          </p>
-                        </div>
-                        <div className="glass-card rounded-lg p-6 space-y-3">
-                          <h4 className="font-semibold text-white/90">Argwines</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Plataforma web internacional para empresa distribuidora de vinos argentinos en Australia
-                            (www.argwinescompany.com).
-                          </p>
-                        </div>
-                        <div className="glass-card rounded-lg p-6 space-y-3">
-                          <h4 className="font-semibold text-white/90">Rasafertil</h4>
-                          <p className="text-white/70 text-sm leading-relaxed">
-                            Sitio web institucional para empresa de fertilizantes de calidad premium y nutrientes naturales
-                            para suelos.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Categoría 5 */}
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#7F5AF0]">Desarrollo de Producto Propio</h3>
-                      <div className="glass-card rounded-lg p-6 space-y-4">
-                        <div className="flex items-start gap-4">
-                          <div className="relative w-16 h-16 flex-shrink-0">
-                            <Image
-                              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/BrocoagroLogo-5IXhmpYab7akONXntJmmTX4RpWjIDz.jpeg"
-                              alt="BrocoAgro"
-                              fill
-                              className="object-contain rounded"
-                            />
-                          </div>
-                          <div className="flex-1 space-y-3">
-                            <h4 className="font-semibold text-white/90">BrocoAgro</h4>
-                            <p className="text-white/70 text-sm leading-relaxed">
-                              Aplicación integral para la gestión del productor agropecuario. Permite administrar de forma
-                              centralizada trabajos, ingresos, egresos, costos de maquinaria, personal y porcentajes.
-                            </p>
-                            <a
-                              href="https://drive.google.com/file/d/1hY0yCgT_Mm2VmRAX1crmy55eG1lcSE_N/view?usp=drive_link"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 text-sm text-[#7F5AF0] hover:text-[#9D7FF0] transition-colors"
-                            >
-                              Ver Presentación Comercial online
-                              <ExternalLink className="h-4 w-4" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+            <div className="relative mx-auto w-full max-w-7xl animate-on-scroll fade-in rounded-2xl md:rounded-3xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 md:p-6 lg:p-8 backdrop-blur-[2px] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_22px_56px_rgba(0,0,0,0.34)]">
+              <div className="relative mx-auto flex w-full justify-center min-h-[334px] sm:min-h-[360px] md:min-h-[410px]">
+                <ProjectCarousel
+                  items={projectCarouselItems}
+                  cardWidth={320}
+                  viewportWidth="100%"
+                  baseWidth={330}
+                  autoplay
+                  autoplayDelay={2000}
+                  pauseOnHover
+                  loop
+                  className="mx-auto"
+                />
+              </div>
             </div>
           </div>
         </div>

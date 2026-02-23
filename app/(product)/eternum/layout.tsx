@@ -33,10 +33,10 @@ export default function EternumLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="dark" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} ${outfit.variable} ${inter.variable} font-sans bg-black text-white`}>
-        {children}
-      </body>
-    </html>
+    <div
+      className={`dark min-h-screen ${spaceGrotesk.variable} ${outfit.variable} ${inter.variable} font-sans bg-black text-white`}
+    >
+      {children}
+    </div>
   )
 }

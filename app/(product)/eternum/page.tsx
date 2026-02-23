@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   ArrowRight,
   BarChart3,
@@ -27,21 +27,13 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { IndustryMagicBento, type IndustryMagicBentoItem } from "@/components/ui/industry-magic-bento"
+import { MagicBento, type MagicBentoItem } from "@/components/ui/magic-bento"
 import Image from "next/image"
 
 export default function EternumPage() {
   const revealRefs = useRef<HTMLElement[]>([])
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const router = useRouter()
-
-  const navigateWithTransition = (href: string) => {
-    setIsTransitioning(true)
-    document.body.classList.add("page-transitioning")
-    setTimeout(() => {
-      router.push(href)
-    }, 300)
-  }
 
   const openWhatsApp = (text: string) => {
     const base = "https://api.whatsapp.com/send/"
@@ -60,7 +52,145 @@ export default function EternumPage() {
     }
   }
 
+  const industryModules: IndustryMagicBentoItem[] = [
+    {
+      icon: <Wheat className="h-7 w-7" />,
+      title: "Acopio de Granos",
+      description: "Comercialización y acopio de granos",
+      accent: "violet",
+    },
+    {
+      icon: <Package className="h-7 w-7" />,
+      title: "Molinos",
+      description: "Producción de harinas",
+      accent: "blue",
+    },
+    {
+      icon: <Factory className="h-7 w-7" />,
+      title: "Alimentos Balanceados",
+      description: "Producción y formulación",
+      accent: "violet",
+    },
+    {
+      icon: <Wheat className="h-7 w-7" />,
+      title: "Semillas",
+      description: "Producción y comercialización",
+      accent: "blue",
+    },
+    {
+      icon: <Milk className="h-7 w-7" />,
+      title: "Lácteos",
+      description: "Producción de leche y quesos",
+      accent: "violet",
+    },
+    {
+      icon: <Beef className="h-7 w-7" />,
+      title: "Hacienda y Ganadería",
+      description: "Gestión de rodeos y comercialización",
+      accent: "blue",
+    },
+    {
+      icon: <Wrench className="h-7 w-7" />,
+      title: "Metalmecánica",
+      description: "Producción y órdenes de trabajo",
+      accent: "violet",
+    },
+    {
+      icon: <Truck className="h-7 w-7" />,
+      title: "Transporte de Carga",
+      description: "Fletes y logística",
+      accent: "blue",
+    },
+    {
+      icon: <Fuel className="h-7 w-7" />,
+      title: "Combustibles",
+      description: "Compra venta de combustibles y lubricantes",
+      accent: "violet",
+    },
+    {
+      icon: <Package className="h-7 w-7" />,
+      title: "Distribución",
+      description: "Distribución de alimentos",
+      accent: "blue",
+    },
+    {
+      icon: <Newspaper className="h-7 w-7" />,
+      title: "Medios",
+      description: "Avisos y clasificados para diarios",
+      accent: "violet",
+    },
+    {
+      icon: <Receipt className="h-7 w-7" />,
+      title: "Billing",
+      description: "Facturación recurrente por contratos",
+      accent: "blue",
+    },
+  ]
+
+  const featureModules: MagicBentoItem[] = [
+    {
+      id: 1,
+      icon: <Calculator className="h-6 w-6" />,
+      title: "Contabilidad General",
+      description: "Gestión contable completa con plan de cuentas, asientos automáticos y estados financieros.",
+      label: "Finanzas",
+    },
+    {
+      id: 2,
+      icon: <ShoppingCart className="h-6 w-6" />,
+      title: "Compras",
+      description: "Control total del ciclo de compras, desde órdenes hasta recepción y pagos a proveedores.",
+      label: "Operaciones",
+    },
+    {
+      id: 3,
+      icon: <FileText className="h-6 w-6" />,
+      title: "Ventas",
+      description: "Facturación electrónica, presupuestos, remitos y seguimiento completo de operaciones comerciales.",
+      label: "Operaciones",
+    },
+    {
+      id: 4,
+      icon: <Users className="h-6 w-6" />,
+      title: "Cuentas por Cobrar",
+      description: "Seguimiento de deudores, antigüedad de saldos, gestión de cobranzas y recibos.",
+      label: "Finanzas",
+    },
+    {
+      id: 5,
+      icon: <CreditCard className="h-6 w-6" />,
+      title: "Cuentas por Pagar",
+      description: "Control de obligaciones, vencimientos, órdenes de pago y gestión de proveedores.",
+      label: "Finanzas",
+    },
+    {
+      id: 6,
+      icon: <Factory className="h-6 w-6" />,
+      title: "Producción",
+      description: "Órdenes de producción, fórmulas, costos y control de procesos productivos.",
+      label: "Planta",
+    },
+    {
+      id: 7,
+      icon: <Warehouse className="h-6 w-6" />,
+      title: "Gestión de Inventarios",
+      description: "Stock en tiempo real, múltiples depósitos, movimientos, ajustes y valorización.",
+      label: "Stock",
+    },
+    {
+      id: 8,
+      icon: <BarChart3 className="h-6 w-6" />,
+      title: "Tesorería",
+      description: "Gestión de cajas, bancos, cheques, transferencias y conciliaciones bancarias.",
+      label: "Finanzas",
+    },
+  ]
+
   useEffect(() => {
+    const html = document.documentElement
+    html.classList.remove("page-transitioning", "is-scrolling")
+    document.body.classList.remove("page-transitioning", "is-scrolling")
+
     const handleScroll = () => {
       revealRefs.current.forEach((el) => {
         const elementTop = el.getBoundingClientRect().top
@@ -72,39 +202,30 @@ export default function EternumPage() {
     }
     window.addEventListener("scroll", handleScroll)
     handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      html.classList.remove("page-transitioning", "is-scrolling")
+      document.body.classList.remove("page-transitioning", "is-scrolling")
+    }
   }, [])
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId)
     if (section) {
-      document.body.classList.add("is-scrolling")
+      const offsetTop = section.getBoundingClientRect().top + window.scrollY - 80
       window.scrollTo({
-        top: section.offsetTop - 80,
+        top: Math.max(offsetTop, 0),
         behavior: "smooth",
       })
-      setTimeout(() => {
-        document.body.classList.remove("is-scrolling")
-      }, 1000)
     }
   }
 
   return (
-    <div className={`flex min-h-screen flex-col bg-black ${isTransitioning ? "transitioning" : ""}`}>
-      {isTransitioning && (
-        <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-purple-600 to-blue-600 transition-opacity duration-300 flex items-center justify-center">
-          <div className="text-white text-2xl font-bold animate-pulse">Cargando...</div>
-        </div>
-      )}
-
+    <div className="flex min-h-screen flex-col bg-black">
       {/* Floating Navigation */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
         <div className="glass-nav flex lg:inline-flex items-center rounded-full px-4 lg:px-8 py-3 w-[92vw] lg:w-auto justify-between lg:justify-start gap-0 lg:gap-4">
-          <button
-            onClick={() => scrollToSection("hero")}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer flex-shrink-0"
-            aria-label="Ir al inicio"
-          >
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer flex-shrink-0" aria-label="Volver a Home">
             <Image src="/brand/bs-mark-neg.svg" alt="Eternum" width={28} height={28} />
             <span
               className="text-lg lg:text-xl font-bold tracking-wider"
@@ -112,7 +233,7 @@ export default function EternumPage() {
             >
               Eter<span className="gradient-text">num</span>
             </span>
-          </button>
+          </Link>
 
           <div className="hidden lg:flex items-center space-x-8 text-sm ml-4">
             <button
@@ -265,62 +386,17 @@ export default function EternumPage() {
                 Eternum integra todas las funcionalidades esenciales para la gestión completa de tu empresa.
               </p>
             </div>
-            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              <FeatureCard
-                icon={<Calculator className="h-10 w-10" />}
-                title="Contabilidad General"
-                description="Gestión contable completa con plan de cuentas, asientos automáticos y estados financieros."
-                delay={0}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<ShoppingCart className="h-10 w-10" />}
-                title="Compras"
-                description="Control total del ciclo de compras, desde órdenes hasta recepción y pagos a proveedores."
-                delay={0.1}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<FileText className="h-10 w-10" />}
-                title="Ventas"
-                description="Facturación electrónica, presupuestos, remitos y seguimiento completo de operaciones comerciales."
-                delay={0.2}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<Users className="h-10 w-10" />}
-                title="Cuentas por Cobrar"
-                description="Seguimiento de deudores, antigüedad de saldos, gestión de cobranzas y recibos."
-                delay={0.3}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<CreditCard className="h-10 w-10" />}
-                title="Cuentas por Pagar"
-                description="Control de obligaciones, vencimientos, órdenes de pago y gestión de proveedores."
-                delay={0.4}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<Factory className="h-10 w-10" />}
-                title="Producción"
-                description="Órdenes de producción, fórmulas, costos y control de procesos productivos."
-                delay={0.5}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<Warehouse className="h-10 w-10" />}
-                title="Gestión de Inventarios"
-                description="Stock en tiempo real, múltiples depósitos, movimientos, ajustes y valorización."
-                delay={0.6}
-                addToRefs={addToRefs}
-              />
-              <FeatureCard
-                icon={<BarChart3 className="h-10 w-10" />}
-                title="Tesorería"
-                description="Gestión de cajas, bancos, cheques, transferencias y conciliaciones bancarias."
-                delay={0.7}
-                addToRefs={addToRefs}
+            <div className="mt-16 reveal" ref={addToRefs}>
+              <MagicBento
+                items={featureModules}
+                enableStars
+                enableSpotlight
+                enableBorderGlow
+                enableMagnetism
+                enableTilt={false}
+                clickEffect
+                glowColor="127, 90, 240"
+                textAutoHide
               />
             </div>
           </div>
@@ -345,91 +421,8 @@ export default function EternumPage() {
                 Soluciones específicas para diversos rubros, totalmente integradas con la gestión comercial y contable.
               </p>
             </div>
-            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              <IndustryCard
-                icon={<Wheat className="h-8 w-8" />}
-                title="Acopio de Granos"
-                description="Comercialización y acopio de granos"
-                delay={0}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Package className="h-8 w-8" />}
-                title="Molinos"
-                description="Producción de harinas"
-                delay={0.05}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Factory className="h-8 w-8" />}
-                title="Alimentos Balanceados"
-                description="Producción y formulación"
-                delay={0.1}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Wheat className="h-8 w-8" />}
-                title="Semillas"
-                description="Producción y comercialización"
-                delay={0.15}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Milk className="h-8 w-8" />}
-                title="Lácteos"
-                description="Producción de leche y quesos"
-                delay={0.2}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Beef className="h-8 w-8" />}
-                title="Hacienda y Ganadería"
-                description="Gestión de rodeos y comercialización"
-                delay={0.25}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Wrench className="h-8 w-8" />}
-                title="Metalmecánica"
-                description="Producción y órdenes de trabajo"
-                delay={0.3}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Truck className="h-8 w-8" />}
-                title="Transporte de Carga"
-                description="Fletes y logística"
-                delay={0.35}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Fuel className="h-8 w-8" />}
-                title="Combustibles"
-                description="Compra venta de combustibles y lubricantes"
-                delay={0.4}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Package className="h-8 w-8" />}
-                title="Distribución"
-                description="Distribución de alimentos"
-                delay={0.45}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Newspaper className="h-8 w-8" />}
-                title="Medios"
-                description="Avisos y clasificados para diarios"
-                delay={0.5}
-                addToRefs={addToRefs}
-              />
-              <IndustryCard
-                icon={<Receipt className="h-8 w-8" />}
-                title="Billing"
-                description="Facturación recurrente por contratos"
-                delay={0.55}
-                addToRefs={addToRefs}
-              />
+            <div className="mt-16 reveal" ref={addToRefs}>
+              <IndustryMagicBento items={industryModules} />
             </div>
           </div>
         </section>
@@ -581,46 +574,26 @@ export default function EternumPage() {
             </div>
             <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
               <PricingCard
-                title="Basic"
-                description="Para emprendedores y pequeños negocios"
-                features={[
-                  "Módulos principales",
-                  "1 usuario",
-                  "Gestión de inventario",
-                  "Facturación electrónica",
-                  "Soporte por email",
-                ]}
+                title="CENTURY"
+                description="Startups y Pequeñas Empresas"
+                features={["Implementación rápida, funciones esenciales y módulo base de E-commerce."]}
                 delay={0}
                 addToRefs={addToRefs}
                 openWhatsApp={openWhatsApp}
               />
               <PricingCard
-                title="Pro"
-                description="Para empresas en crecimiento"
-                features={[
-                  "Todos los módulos principales",
-                  "Múltiples usuarios",
-                  "Módulos de industria",
-                  "Multi sucursal",
-                  "Reportes avanzados",
-                  "Soporte prioritario",
-                ]}
+                title="MILLENNIUM"
+                description="PyMEs en expansión"
+                features={["Mayor personalización, módulos avanzados y gestión de procesos específicos."]}
                 highlighted={true}
                 delay={0.1}
                 addToRefs={addToRefs}
                 openWhatsApp={openWhatsApp}
               />
               <PricingCard
-                title="Enterprise"
-                description="Solución personalizada"
-                features={[
-                  "Usuarios ilimitados",
-                  "Multi empresa",
-                  "Multi moneda",
-                  "Implementación dedicada",
-                  "Desarrollo personalizado",
-                  "Soporte 24/7",
-                ]}
+                title="ETERNUM"
+                description="Nivel Corporativo"
+                features={["Gestión compleja, multi-área, alto volumen de datos y auditoría total."]}
                 delay={0.2}
                 addToRefs={addToRefs}
                 openWhatsApp={openWhatsApp}
@@ -738,54 +711,6 @@ export default function EternumPage() {
   )
 }
 
-// Feature Card Component
-interface FeatureCardProps {
-  icon: React.ReactNode
-  title: string
-  description: string
-  delay: number
-  addToRefs: (el: HTMLElement | null) => void
-}
-
-function FeatureCard({ icon, title, description, delay, addToRefs }: FeatureCardProps) {
-  return (
-    <div className="feature-card reveal" ref={addToRefs} style={{ animationDelay: `${delay}s` }}>
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg gradient-primary">{icon}</div>
-      <h3 className="mb-2 text-xl font-semibold">{title}</h3>
-      <p className="text-gray-400">{description}</p>
-    </div>
-  )
-}
-
-// Industry Card Component
-interface IndustryCardProps {
-  icon: React.ReactNode
-  title: string
-  description: string
-  delay: number
-  addToRefs: (el: HTMLElement | null) => void
-}
-
-function IndustryCard({ icon, title, description, delay, addToRefs }: IndustryCardProps) {
-  return (
-    <div
-      className="industry-card reveal p-5 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-[#7F5AF0]/50 transition-all duration-300 hover:transform hover:scale-105"
-      ref={addToRefs}
-      style={{ animationDelay: `${delay}s` }}
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-[#7F5AF0]/20 to-[#3E6FA8]/20 text-[#7F5AF0]">
-          {icon}
-        </div>
-        <div>
-          <h3 className="font-semibold text-white">{title}</h3>
-          <p className="text-sm text-gray-400">{description}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // Benefit Card Component
 interface BenefitCardProps {
   number: string
@@ -840,9 +765,9 @@ interface PricingCardProps {
 function PricingCard({ title, description, features, highlighted, delay, addToRefs, openWhatsApp }: PricingCardProps) {
   const handleClick = () => {
     const planMessages: Record<string, string> = {
-      Basic: "Hola! Me interesa una cotización del plan Basic de Eternum",
-      Pro: "Hola! Quiero conocer más sobre el plan Pro de Eternum",
-      Enterprise: "Hola! Necesito hablar sobre el plan Enterprise de Eternum",
+      CENTURY: "Hola! Me interesa una cotización del plan CENTURY de Eternum",
+      MILLENNIUM: "Hola! Quiero conocer más sobre el plan MILLENNIUM de Eternum",
+      ETERNUM: "Hola! Necesito hablar sobre el plan ETERNUM de Eternum",
     }
     const msg = planMessages[title] ?? "Hola! Me interesa conocer más sobre Eternum"
     openWhatsApp(msg)

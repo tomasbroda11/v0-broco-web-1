@@ -369,7 +369,7 @@ export default function BrocoSolutionsLanding() {
                 },
                 {
                   name: "Argwines",
-                  logo: "\public\images\ArgwinesLogo.jpeg",
+                  logo: "public\images\ArgwinesLogo.jpeg",
                 },
                 {
                   name: "Rasafertil",
